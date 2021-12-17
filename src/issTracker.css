@@ -1,0 +1,46 @@
+body {
+    margin: 0;
+    color: white;
+    font-family: 'Bakbak One', 'Verdana', 'Arial', sans-serif;
+}
+
+h1 {
+    font-size: 3em;
+}
+
+#manualRotate {
+    display: block;
+    float: right;
+}
+
+#three-container {
+    position: absolute;
+    top: 0;
+    z-index: -1;
+}
+
+#main-content .text {
+    position: absolute;
+    margin-left: 20px;
+}
+
+.legend {
+    min-width: 100px;
+    display: inline-block;
+    opacity: 0.6;
+}
+
+@media only screen and (min-width: 1000px) {
+    #main-content {
+        height: 100vh;
+        position: relative;
+        width: 50%;
+        float: right;
+    }
+
+    #main-content .text {
+        top: 50%;
+        transform: translateY(-54%);
+    }
+
+}
