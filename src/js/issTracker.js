@@ -88,22 +88,25 @@ controls.maxDistance = 100;
 
 // adds 3D model of earth and ISS
 var iss_rot;
+var earth_iss_group;
 
 const loader = new GLTFLoader();
 loader.load('3d/globe_export_nogrid.gltf', function (gltf) {
 
-    const model = gltf.scene;
+    earth_iss_group = gltf.scene;
 
-    model.position.set(0, 0, 0);
-    model.rotateY(0.4101524);
-    model.rotateX(0.4101524);
-    model.scale.set(0.001, 0.001, 0.001);
+    earth_iss_group.position.set(0, 0, 0);
+    earth_iss_group.rotateY(0.4101524);
+    earth_iss_group.rotateX(0.4101524);
+    earth_iss_group.scale.set(0.001, 0.001, 0.001);
+
+    
 
     // sets specific ISS object stuff.
     iss_rot = gltf.scene.children[0].children[1]; // assing the group to a specific variable for easy access
     iss_rot.rotation.set(0, 0, 0, "YXZ"); // changes rotation order to YXZ so Latitude and Longitude works properly
 
-    scene.add(model);
+    scene.add(earth_iss_group);
     animate();
 
 }, undefined, function (e) {
@@ -151,6 +154,8 @@ function animate() {
     }
 
     controls.update();
+
+    earth_iss_group.rotation.y += 0.0005;
 
     // stats.update();
 
