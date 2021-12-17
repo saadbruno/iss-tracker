@@ -5,7 +5,6 @@ import { OrbitControls } from './threejs/modules/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from './threejs/modules/jsm/loaders/GLTFLoader.js';
 import { RoomEnvironment } from './threejs/modules/jsm/environments/RoomEnvironment.js';
 
-
 const clock = new THREE.Clock();
 
 const container = document.getElementById('three-container');
@@ -50,14 +49,11 @@ scene.add(stars);
 // creates camera
 const camera = new THREE.PerspectiveCamera(15, window.innerWidth / window.innerHeight, 1, 20000);
 camera.position.set(0, 0, -80);
-if (window.innerWidth < 1000) {
-    camera.filmOffset = 0;
-} else {
+if (window.innerWidth >= 1000) {
     camera.filmOffset = window.innerWidth / 384;
+    camera.updateProjectionMatrix();
 }
-camera.updateProjectionMatrix();
 
-// renderer.toneMapping = THREE.ACESFilmicToneMapping;
 
 // orbit control
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -129,8 +125,6 @@ function animate() {
     renderer.render(scene, camera);
 
 }
-
-
 
 function getIssData() {
     fetch("http://api.open-notify.org/iss-now.json")
