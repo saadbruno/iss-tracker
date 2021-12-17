@@ -164,27 +164,27 @@ function animate() {
 }
 
 function getIssData() {
-    fetch("http://api.open-notify.org/iss-now.json")
+    fetch("https://api.wheretheiss.at/v1/satellites/25544")
         .then((response) => {
             return response.json();
         })
         .then((data) => {
-            // console.log(`rotating ISS to ${data.iss_position.latitude} and ${data.iss_position.longitude}`);
-            iss_rot.rotation.x = THREE.MathUtils.degToRad(data.iss_position.latitude); // latitude
-            iss_rot.rotation.y = THREE.MathUtils.degToRad(data.iss_position.longitude); // longitude
+            // console.log(`rotating ISS to ${data.latitude} and ${data.longitude}`);
+            iss_rot.rotation.x = THREE.MathUtils.degToRad(data.latitude); // latitude
+            iss_rot.rotation.y = THREE.MathUtils.degToRad(data.longitude); // longitude
 
             // updates text on screen
-            if (data.iss_position.latitude < 0) {
-                console.log(data.iss_position.latitude);
-                var latitude = data.iss_position.latitude * -1 + "° South";
+            if (data.latitude < 0) {
+                console.log(data.latitude);
+                var latitude = data.latitude * -1 + "° South";
             } else {
-                var latitude = data.iss_position.latitude + "° North";
+                var latitude = data.latitude + "° North";
             }
 
-            if (data.iss_position.longitude < 0) {
-                var longitude = data.iss_position.longitude * -1 + "° West";
+            if (data.longitude < 0) {
+                var longitude = data.longitude * -1 + "° West";
             } else {
-                var longitude = data.iss_position.longitude + "° East";
+                var longitude = data.longitude + "° East";
             }
             
             document.getElementById("latText").innerHTML = latitude;
