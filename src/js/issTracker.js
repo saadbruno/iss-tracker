@@ -3,7 +3,10 @@ import * as THREE from './threejs/build/three.module.js';
 import Stats from './threejs/modules/jsm/libs/stats.module.js';
 import { OrbitControls } from './threejs/modules/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from './threejs/modules/jsm/loaders/GLTFLoader.js';
-import { RoomEnvironment } from './threejs/modules/jsm/environments/RoomEnvironment.js';
+import { EffectComposer } from './threejs/modules/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from './threejs/modules/jsm/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from './threejs/modules/jsm/postprocessing/UnrealBloomPass.js';
+
 
 const clock = new THREE.Clock();
 
@@ -15,6 +18,9 @@ container.appendChild(stats.dom);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.toneMapping = THREE.ReinhardToneMapping;
+// renderer.toneMapping = THREE.CineonToneMapping;
+// renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.outputEncoding = THREE.sRGBEncoding;
 container.appendChild(renderer.domElement);
 
@@ -24,8 +30,7 @@ container.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
 const pmremGenerator = new THREE.PMREMGenerator(renderer);
 
-scene.background = new THREE.Color(0x1d0e23);
-scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.background = new THREE.Color(0x09030c);
 
 
 // stars
@@ -54,6 +59,27 @@ if (window.innerWidth >= 1000) {
     camera.updateProjectionMatrix();
 }
 
+// lights
+const light = new THREE.PointLight( 0xffffff, 10, 100 );
+light.position.set( -50, 50, 50 );
+scene.add( light );
+
+const light2 = new THREE.PointLight( 0x347deb, 10, 100 );
+light2.position.set( -20, 20, -50 );
+scene.add( light2 );
+
+const light3 = new THREE.PointLight( 0x9634eb, 10, 100 );
+light3.position.set( 50, -50, 0 );
+scene.add( light3 );
+
+const light4 = new THREE.PointLight( 0x347deb, 2, 100 );
+light4.position.set( 50, 50, 0 );
+scene.add( light4 );
+
+const light5 = new THREE.PointLight( 0x347deb, 2, 100 );
+light5.position.set( -50, -50, 0 );
+scene.add( light5 );
+
 
 // orbit control
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -62,13 +88,15 @@ controls.update();
 controls.enablePan = false;
 // controls.enableZoom = false;
 controls.enableDamping = true;
+controls.minDistance = 50;
+controls.maxDistance = 100;
 
 
 // adds 3D model of earth and ISS
 var iss_rot;
 
 const loader = new GLTFLoader();
-loader.load('3d/globe_export.gltf', function (gltf) {
+loader.load('3d/globe_export_nogrid.gltf', function (gltf) {
 
     const model = gltf.scene;
 
@@ -124,6 +152,8 @@ function animate() {
 
     renderer.render(scene, camera);
 
+    // enable this for post processing
+    // composer.render();
 }
 
 function getIssData() {
