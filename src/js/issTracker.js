@@ -169,8 +169,21 @@ function getIssData() {
             iss_rot.rotation.y = THREE.MathUtils.degToRad(data.iss_position.longitude); // longitude
 
             // updates text on screen
-            document.getElementById("latText").innerHTML = data.iss_position.latitude;
-            document.getElementById("longText").innerHTML = data.iss_position.longitude;
+            if (data.iss_position.latitude < 0) {
+                console.log(data.iss_position.latitude);
+                var latitude = data.iss_position.latitude * -1 + "° South";
+            } else {
+                var latitude = data.iss_position.latitude + "° North";
+            }
+
+            if (data.iss_position.longitude < 0) {
+                var longitude = data.iss_position.longitude * -1 + "° West";
+            } else {
+                var longitude = data.iss_position.longitude + "° East";
+            }
+            
+            document.getElementById("latText").innerHTML = latitude;
+            document.getElementById("longText").innerHTML = longitude;
 
         }).catch((error) => {
             // Error handling
@@ -178,17 +191,3 @@ function getIssData() {
             console.error(error);
         });
 }
-
-
-// manual rotation
-// document.getElementById("button").addEventListener("click", rotateISS);
-
-// function rotateISS() {
-//     var rotX = document.getElementById("rotX").value;
-//     var rotY = document.getElementById("rotY").value;
-//     var rotZ = document.getElementById("rotZ").value;
-//     console.log(`rotating to ${rotX} ${rotY} ${rotZ}`);
-//     iss_rot.rotation.x = THREE.MathUtils.degToRad(rotX);
-//     iss_rot.rotation.y = THREE.MathUtils.degToRad(rotY);
-//     iss_rot.rotation.z = THREE.MathUtils.degToRad(rotZ);
-// }
