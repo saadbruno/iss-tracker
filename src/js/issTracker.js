@@ -3,24 +3,18 @@ import * as THREE from './threejs/build/three.module.js';
 import Stats from './threejs/modules/jsm/libs/stats.module.js';
 import { OrbitControls } from './threejs/modules/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from './threejs/modules/jsm/loaders/GLTFLoader.js';
-import { EffectComposer } from './threejs/modules/jsm/postprocessing/EffectComposer.js';
-import { RenderPass } from './threejs/modules/jsm/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from './threejs/modules/jsm/postprocessing/UnrealBloomPass.js';
 
 
 const clock = new THREE.Clock();
 
 const container = document.getElementById('three-container');
 
-const stats = new Stats();
-container.appendChild(stats.dom);
+// const stats = new Stats();
+// container.appendChild(stats.dom);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.toneMapping = THREE.ReinhardToneMapping;
-// renderer.toneMapping = THREE.CineonToneMapping;
-// renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.outputEncoding = THREE.sRGBEncoding;
 container.appendChild(renderer.domElement);
 
@@ -116,6 +110,16 @@ loader.load('3d/globe_export_nogrid.gltf', function (gltf) {
     console.error(e);
 });
 
+// earth's atmosphere using a 2D sprite
+const atmoMap = new THREE.TextureLoader().load( '3d/glow_rgb.png' );
+const atmoMaterial = new THREE.SpriteMaterial( { map: atmoMap, color: 0xffffff } );
+atmoMaterial.depthTest = false; // needed to render sprite on top of geometry
+atmoMaterial.alphaMap = new THREE.TextureLoader().load( '3d/glow_alpha.png' );
+const atmoSprite = new THREE.Sprite( atmoMaterial );
+atmoSprite.scale.set(16.3, 16.3, 1);
+atmoSprite.renderOrder = 1; // actually render sprite on top of geometry
+scene.add( atmoSprite );
+
 // gets initial ISS data
 getIssData();
 
@@ -148,12 +152,10 @@ function animate() {
 
     controls.update();
 
-    stats.update();
+    // stats.update();
 
     renderer.render(scene, camera);
 
-    // enable this for post processing
-    // composer.render();
 }
 
 function getIssData() {
